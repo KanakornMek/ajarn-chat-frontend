@@ -12,14 +12,23 @@ export default function NavBar({ courses }: Props) {
     <div className="nav-bar">
       <div className="nav-bar-top">
         <div className="profile-container"></div>
-        <h4>Pawarisa Munj.</h4>
+        <h3>Pawarisa Munj.</h3>
       </div>
 
       <ul className="course-list">
-        <h3 style={{ marginLeft: "10px", marginBottom: "0px" }}>Courses</h3>
+        <h4
+          style={{
+            marginLeft: "20px",
+            marginBottom: "10px",
+            marginTop: "30px",
+          }}
+        >
+          Courses
+        </h4>
 
         {courses.map((course) => (
           <li
+            key={course.id}
             onClick={() => {
               navigate("/courses/" + course.id + "/threads/announcements", {
                 replace: true,
@@ -29,9 +38,9 @@ export default function NavBar({ courses }: Props) {
               course.id === course_id ? "nav-tile-selected" : "nav-tile"
             }
           >
-            <h2>
+            <h1>
               {course.id} {course.course_name}
-            </h2>
+            </h1>
           </li>
         ))}
       </ul>

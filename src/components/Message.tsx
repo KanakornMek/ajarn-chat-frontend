@@ -1,13 +1,19 @@
+import { threadType } from "../pages/Course";
+
 interface Props {
-  topic: string;
-  description: string;
+  threadList: threadType[];
 }
 
-export default function Message({ topic, description }: Props) {
+export default function Message({ threadList }: Props) {
   return (
     <div className="message">
-      <h4>{topic}</h4>
-      <h1>{description}</h1>
+      {threadList.map((content: threadType) => (
+        <div className="message-flow">
+          <h5>author: {content.author_id}</h5>
+          <h4>{content.topic}</h4>
+          <h1>{content.content}</h1>
+        </div>
+      ))}
     </div>
   );
 }
