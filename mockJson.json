@@ -1,0 +1,123 @@
+{
+  "courses": [
+    {
+      "id": "21153442",
+      "course_name": "Calculus II",
+      "semester": 2,
+      "year": 2024
+    },
+    {
+      "id": "21153221",
+      "course_name": "Physics II",
+      "semester": 2,
+      "year": 2024
+    },
+    {
+      "id": "21144566",
+      "course_name": "Prob Stat",
+      "semester": 2,
+      "year": 2024
+    }
+  ],
+  "threads": [
+    {
+      "id": "asfjdklvndakfsa",
+      "course_id": "21153442",
+      "author_id": "fdsakfkalffasd",
+      "urgency_tag": "announcements",
+      "status": "pending",
+      "created_at": 1711194627000,
+      "topic": "Omitted Content in the Exam",
+      "content": "Topics not included in the exam are the following: Polar functions and Epsilon-Delta Proof.",
+      "parent_ref": "aslfdvjfdaafalv"
+    },
+    {
+      "id": "asfjdklvndakfsb",
+      "course_id": "21153442",
+      "author_id": "fdsakfkalffasd",
+      "urgency_tag": "announcements",
+      "status": "pending",
+      "created_at": 1711194627000,
+      "topic": "Result Announcement",
+      "content": "Students can now check their scores via MCV.",
+      "parent_ref": "aslfdvjfdaafalv"
+    },
+    {
+      "id": "asfjdklvndakfdd",
+      "course_id": "21153442",
+      "author_id": "fdsakfkalffasd",
+      "urgency_tag": "announcements",
+      "status": "pending",
+      "created_at": 1711194627000,
+      "topic": "Result Announcement",
+      "content": "Students can now check their scores via MCV.",
+      "parent_ref": "aslfdvjfdaafalv"
+    },
+    {
+      "id": "asfjdklvndakfff",
+      "course_id": "21153442",
+      "author_id": "fdsakfkalffasd",
+      "urgency_tag": "announcements",
+      "status": "pending",
+      "created_at": 1711194627000,
+      "topic": "Result Announcement",
+      "content": "Students can now check their scores via MCV.",
+      "parent_ref": "aslfdvjfdaafalv"
+    },
+    {
+      "id": "asfjdklvndakfvv",
+      "course_id": "21153442",
+      "author_id": "fdsakfkalffasd",
+      "urgency_tag": "announcements",
+      "status": "pending",
+      "created_at": 1711194627000,
+      "topic": "Result Announcement",
+      "content": "Students can now check their scores via MCV.",
+      "parent_ref": "aslfdvjfdaafalv"
+    },
+    {
+      "id": "asfjdklvndakfsc",
+      "course_id": "21153221",
+      "author_id": "fdsakfkalffasd",
+      "urgency_tag": "urgent",
+      "status": "pending",
+      "created_at": 1711194627000,
+      "topic": "Will this topic be in the exam?",
+      "content": "This topic was not covered in class. Will it be included in the exam?",
+      "parent_ref": "aslfdvjfdaafalv"
+    },
+    {
+      "id": "asfjdklvndakfsc",
+      "course_id": "21153221",
+      "author_id": "fdsakfkalffasd",
+      "urgency_tag": "urgent",
+      "status": "pending",
+      "created_at": 1711194627000,
+      "topic": "I think so",
+      "content": "This topic was not covered in class. Will it be included in the exam?",
+      "parent_ref": "aslfdvjfdaafalv"
+    },
+    {
+      "id": "asfjdklvndakfsd",
+      "course_id": "21153221",
+      "author_id": "fdsakfkalffasd",
+      "urgency_tag": "urgent",
+      "status": "pending",
+      "created_at": 1711194627000,
+      "topic": "Question 40",
+      "content": "How do I solve the problem?",
+      "parent_ref": "aslfdvjfdaafalv"
+    },
+    {
+      "id": "asfjdklvndakfsd",
+      "course_id": "21153221",
+      "author_id": "fdsakfkalffasd",
+      "urgency_tag": "urgent",
+      "status": "pending",
+      "created_at": 1711194627000,
+      "topic": "Question 40",
+      "content": "How do I solve the problem?",
+      "parent_ref": "aslfdvjfdaafalv"
+    }
+  ]
+}
