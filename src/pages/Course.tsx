@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/Navbar";
 import Message from "../components/Message";
 import PopUp from "../components/PopUp";
 import Question from "../components/Question";
