@@ -224,7 +224,8 @@ justify-content: center;
 
 
 .pop-up {
-    position: absolute;
+    position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
    top: 5%;
    right: 10%;
    left: 10%;

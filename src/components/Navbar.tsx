@@ -1,12 +1,25 @@
-import { courseType } from "../pages/Course";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import apiAxios from "../utils/apiAxios";
 
-interface Props {
-  courses: courseType[];
+interface Course {
+  id: string;
+  name: string;
+  semester: number;
+  year: number;
+  uniCourseId: string;
 }
-export default function NavBar({ courses }: Props) {
+export default function NavBar() {
+  const [courses, setCourses] = useState<Course[]>([]); 
   const { course_id } = useParams();
+  useEffect(() => {
+    const getCourses = async () => {
+      let courses = await apiAxios.get('/courses');
+      setCourses(courses.data);
+    }
 
+    getCourses();
+  }, [])
   const navigate = useNavigate();
   return (
     <div className="nav-bar">
@@ -39,7 +52,7 @@ export default function NavBar({ courses }: Props) {
             }
           >
             <h1>
-              {course.id} {course.course_name}
+              {course.uniCourseId} {course.name}
             </h1>
           </li>
         ))}
