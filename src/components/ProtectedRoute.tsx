@@ -1,13 +1,28 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { useEffect } from "react";
+import { CircularProgress } from "@mui/material";
+import ServerErrorPage from "../pages/ServerErrorPage";
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
 }
 function ProtectedRoute({ children }: ProtectedRouteProps) {
-    const { isAuthenticated } = useAuth();
-    if (!isAuthenticated) {
-        return <Navigate to="/" replace />;
+    const { isAuthenticated, loading, serverError } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log(isAuthenticated, loading)
+        if (!isAuthenticated && !loading && !serverError) {
+            navigate("/", {replace: true});
+            console.log("navigate")
+        }
+    }, [isAuthenticated, loading])
+    if (loading) {
+        return <CircularProgress />
+    }
+    if (serverError) {
+        return <ServerErrorPage />
     }
     return children;
 }

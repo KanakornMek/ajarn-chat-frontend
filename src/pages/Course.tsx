@@ -1,53 +1,36 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Routes, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import NavBar from "../components/Navbar";
-import Message from "../components/Message";
 import PopUp from "../components/PopUp";
-import Question from "../components/Question";
+import apiAxios from "../utils/apiAxios";
+// import Announcement from "../components/Message";
 
 export interface courseType {
   id: string;
-  course_name: string;
-  semester: number;
+  name: string;
+  semester: string;
   year: number;
+  uniCourseId: string;
 }
 
-export interface threadType {
-  id: string;
-  course_id: string;
-  author_id: string;
-  urgency_tag: string;
-  status: string;
-  created_at: number;
-  topic: string;
-  content: string;
-  parent_ref?: string;
-}
+
 
 export default function Course() {
   /*data*/
-  const [courseData, setCourseData] = useState<courseType[]>([]);
-  const [threadData, setThreadData] = useState<threadType[]>([]);
-  const callApi = async (get: string) => {
-    try {
-      const res = await axios.get("http://localhost:8000/" + get);
-      if (get === "courses") {
-        setCourseData(res.data);
-      }
-      if (get === "threads") {
-        setThreadData(res.data);
-      }
-    } catch (error) {}
-  };
+  const [courseData, setCourseData] = useState<courseType>();
+
+  const { course_id, thread_urgency } = useParams();
+
   useEffect(() => {
-    callApi("courses");
-    callApi("threads");
+    const getCourseData = async () => {
+      const courses = await apiAxios.get(`/courses/${course_id}`);
+      setCourseData(courses.data);
+    };
+
+    getCourseData();
   }, []);
 
   /*params*/
-  const { course_id } = useParams();
-  const { thread_urgency } = useParams();
 
   /*array*/
   const threadArray = [
@@ -66,50 +49,13 @@ export default function Course() {
     changePopUp(false);
     console.log(popUp);
   };
-  const getByID = (get: keyof courseType) => {
-    for (var course of courseData) {
-      if (course_id === course.id) {
-        return course[get];
-      }
-    }
-  };
-  const getThreadName = () => {
-    for (var thread of threadArray) {
-      if (thread_urgency === thread.urgency_tag) {
-        return thread.urgency_name;
-      }
-    }
-  };
-  const navigate = useNavigate();
 
-  /*var*/
-  const courseName = getByID("course_name");
-  const threadName = getThreadName();
-  const filtredThreadData: threadType[] = [];
-  for (var content of threadData) {
-    console.log(content.course_id);
-    console.log(course_id);
-    if (
-      thread_urgency === content.urgency_tag &&
-      course_id === content.course_id
-    ) {
-      filtredThreadData.push(content);
-    }
-  }
-  const threadMap: { [id: string]: threadType[] } = {};
-  for (var content of filtredThreadData) {
-    if (content.id in threadMap) {
-      threadMap[content.id].push(content);
-    } else {
-      threadMap[content.id] = [content];
-    }
-  }
-  console.log(threadMap);
+  const navigate = useNavigate();
 
   return (
     <div className="course">
       <div className={popUp ? "blurer" : "course"}>
-        <NavBar courses={courseData} />
+        <NavBar />
         <div className="course-content">
           <div className="course-nav-bar">
             <div
@@ -117,7 +63,7 @@ export default function Course() {
               style={{ borderBottom: "1px solid black" }}
             >
               <h1>
-                {course_id} {courseName}
+                {courseData?.uniCourseId} {courseData?.name}
               </h1>
             </div>
             <ul>
@@ -148,7 +94,10 @@ export default function Course() {
                   }
                   onClick={() => {
                     navigate(
-                      "/courses/" + course_id + "/threads/" + thread.urgency_tag
+                      "/courses/" +
+                        course_id +
+                        "/threads/" +
+                        thread.urgency_tag
                     );
                   }}
                 >
@@ -170,29 +119,16 @@ export default function Course() {
                 borderRadius: "0px 10px 0px 0px",
               }}
             >
-              <h1>{threadName ? threadName : "# Announcements"}</h1>
+              {/* <h1>{threadName ? threadName : "# Announcements"}</h1> */}
             </div>
             <div className="course-thread">
-              {Object.keys(threadMap).map((threadId) =>
-                thread_urgency === "announcements" ? (
-                  <Message threadList={threadMap[threadId]} />
-                ) : (
-                  <Question
-                    threadList={threadMap[threadId]}
-                    threadID={threadId}
-                    courseID={course_id ? course_id : ""}
-                    urgencyTag={thread_urgency ? thread_urgency : ""}
-                  />
-                )
-              )}
+              <Outlet />
             </div>
-            <button className="add-button" onClick={handleAddButton}>
-              +
-            </button>
+            
           </div>
         </div>
       </div>
-      {popUp ? <PopUp handleCancel={handleCancelButton} /> : null}
+      
     </div>
   );
 }

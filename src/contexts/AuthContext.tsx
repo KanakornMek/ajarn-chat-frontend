@@ -5,6 +5,7 @@ interface AuthContextProps {
     setToken: (newToken: string | null) => void;
     isAuthenticated: boolean;
     loading: boolean;
+    serverError: boolean;
 }
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
