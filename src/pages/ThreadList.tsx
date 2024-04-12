@@ -73,7 +73,7 @@ export default function ThreadList() {
   return (
     <>
       {threadList.map((data, index) => (
-        <div className="question-expanded" key={index}>
+        <div className="question-expanded" style={{overflowY: "visible"}} key={index}>
           <ThreadAction
             showModal={handleAddButton}
             setReference={setReference}

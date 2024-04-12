@@ -1,7 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { Select, MenuItem, Autocomplete, TextField } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { threadType } from "../pages/ThreadList";
 import "../styles/PopUp.css";
@@ -24,6 +24,7 @@ export default function PopUp({ handleCancel, reference }: Props) {
   const [threads, setThreads] = useState<threadRef[]>([]);
   const { course_id } = useParams();
   const apiAxios = useApiAxios();
+  const navigate = useNavigate();
 
   useEffect(() => {
     apiAxios.get(`/courses/${course_id}/threads`).then((res) => {
@@ -44,12 +45,12 @@ export default function PopUp({ handleCancel, reference }: Props) {
 
   const onSubmit = async (data: any) => {
     try {
-      await apiAxios.post(`/courses/${course_id}/threads`, {...data, parentThread: data.parentThread.id});
-      console.log(data);
+      await apiAxios.post(`/courses/${course_id}/threads`, {...data, parentThread: data.parentThread?.id});
     } catch (err) {
       console.error(err);
     } finally {
       handleCancel();
+      navigate(0);
     }
   };
 
