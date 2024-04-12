@@ -1,0 +1,45 @@
+.thread_action_container {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+}
+
+.thread_action {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.layer {
+    position:fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    z-index: 10;
+}
+.actions_popout {
+    cursor: pointer;
+    position: absolute;
+    z-index: 20;
+    top: 0;
+    right: 30px;
+    margin: 10px 10px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid rgb(129, 129, 129);
+    box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.5);
+}
+
+.actions_popout p {
+    margin: 0px;
+    padding: 0px;
+}

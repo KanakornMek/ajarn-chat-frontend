@@ -2,8 +2,8 @@ import { useForm } from "react-hook-form";
 import { loginUser } from "../services/api";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import apiAxios from "../utils/apiAxios";
 import { useEffect } from "react";
+import useApiAxios from "../hooks/useApiAxios";
 
 interface FormData {
   studentIdOrEmail: string;
@@ -26,6 +26,7 @@ function LoginForm() {
   } = useForm<FormData>();
 
   const { setToken, isAuthenticated } = useAuth()
+  const apiAxios = useApiAxios();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,7 +46,7 @@ function LoginForm() {
         email: isEmail(data.studentIdOrEmail) ? data.studentIdOrEmail : undefined,
         id: isStudentId(data.studentIdOrEmail) ? data.studentIdOrEmail : undefined,
         password: data.password
-    }, setToken);
+    }, apiAxios, setToken);
     
   };
   const validateStudentIdOrEmail = (value: string): string | undefined => {

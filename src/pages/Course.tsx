@@ -1,7 +1,6 @@
-import { useParams, useNavigate, Routes, Outlet } from "react-router-dom";
+import { useParams, useNavigate, Outlet } from "react-router-dom";
 import { useState, useEffect } from "react";
 import NavBar from "../components/Navbar";
-import PopUp from "../components/PopUp";
 import apiAxios from "../utils/apiAxios";
 // import Announcement from "../components/Message";
 
@@ -13,14 +12,11 @@ export interface courseType {
   uniCourseId: string;
 }
 
-
-
 export default function Course() {
   /*data*/
   const [courseData, setCourseData] = useState<courseType>();
-
   const { course_id, thread_urgency } = useParams();
-
+  const [title, setTitle] = useState<string>("");
   useEffect(() => {
     const getCourseData = async () => {
       const courses = await apiAxios.get(`/courses/${course_id}`);
@@ -36,25 +32,17 @@ export default function Course() {
   const threadArray = [
     { urgency_name: "!!! Urgent", urgency_tag: "urgent" },
     { urgency_name: "!! Regular", urgency_tag: "regular" },
-    { urgency_name: "! Low Priority", urgency_tag: "low_priority" },
+    { urgency_name: "! Low Priority", urgency_tag: "lowPriority" },
   ];
   /*function*/
 
   /*state*/
-  const [popUp, changePopUp] = useState(false);
-  const handleAddButton = () => {
-    changePopUp(true);
-  };
-  const handleCancelButton = () => {
-    changePopUp(false);
-    console.log(popUp);
-  };
 
   const navigate = useNavigate();
 
   return (
     <div className="course">
-      <div className={popUp ? "blurer" : "course"}>
+      <div className="course">
         <NavBar />
         <div className="course-content">
           <div className="course-nav-bar">
@@ -94,10 +82,7 @@ export default function Course() {
                   }
                   onClick={() => {
                     navigate(
-                      "/courses/" +
-                        course_id +
-                        "/threads/" +
-                        thread.urgency_tag
+                      "/courses/" + course_id + "/threads/" + thread.urgency_tag
                     );
                   }}
                 >
@@ -119,16 +104,16 @@ export default function Course() {
                 borderRadius: "0px 10px 0px 0px",
               }}
             >
-              {/* <h1>{threadName ? threadName : "# Announcements"}</h1> */}
+              <h1>
+                {title}
+              </h1>
             </div>
             <div className="course-thread">
-              <Outlet />
+              <Outlet context={setTitle} />
             </div>
-            
           </div>
         </div>
       </div>
-      
     </div>
   );
 }

@@ -9,23 +9,37 @@ interface Course {
   year: number;
   uniCourseId: string;
 }
+
+interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
 export default function NavBar() {
-  const [courses, setCourses] = useState<Course[]>([]); 
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const { course_id } = useParams();
   useEffect(() => {
+    const getUserInfo = async () => {
+      const userInfo = await apiAxios.get("/user");
+      setUser(userInfo.data);
+    };
+
     const getCourses = async () => {
-      let courses = await apiAxios.get('/courses');
+      let courses = await apiAxios.get("/courses");
       setCourses(courses.data);
-    }
+    };
 
     getCourses();
-  }, [])
+    getUserInfo();
+  }, []);
   const navigate = useNavigate();
   return (
     <div className="nav-bar">
       <div className="nav-bar-top">
         <div className="profile-container"></div>
-        <h3>Pawarisa Munj.</h3>
+        <h3 style={{textOverflow: "ellipsis", whiteSpace: "nowrap", width: "10ch", overflow:"hidden"}}>{user?.firstName + " " + user?.lastName}</h3>
       </div>
 
       <ul className="course-list">
