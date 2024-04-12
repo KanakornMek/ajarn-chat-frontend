@@ -1,7 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
 import AuthContext from "../contexts/AuthContext";
 import apiAxios from "../utils/apiAxios";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+import UserContext from "../contexts/UserContext";
+import { jwtDecode } from "jwt-decode";
+
+interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -9,12 +17,10 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("token")
   );
-  const [refreshToken, setRefreshToken] = useState<string | null>(
-    localStorage.getItem("refreshToken")
-  );
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [serverError, setServerError] = useState<boolean>(false);
+  const [userValue, setUserValue] = useState<User>();
 
   useEffect(() => {
     if (token) {
@@ -43,7 +49,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       } catch (err) {
         if (axios.isAxiosError(err)) {
-          if (err.code === "ERR_NETWORK" || err.status === 500) setServerError(true);
+          if (err.code === "ERR_NETWORK" || err.status === 500)
+            setServerError(true);
         } else {
           console.error(err);
         }
@@ -65,13 +72,19 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setToken,
       isAuthenticated,
       loading,
-      serverError
+      serverError,
     }),
     [token, isAuthenticated, loading, serverError]
   );
 
+  useEffect(() => {
+    if (token) setUserValue(jwtDecode(token));
+  }, [token]);
+
   return (
-    <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={authValue}>
+      <UserContext.Provider value={userValue}>{children}</UserContext.Provider>
+    </AuthContext.Provider>
   );
 };
 

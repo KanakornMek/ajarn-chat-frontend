@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import apiAxios from "../utils/apiAxios";
 import { useNavigate, useParams } from "react-router-dom";
-import PopUp from "../components/PopUp";
+import PopUp, { threadRef } from "../components/PopUp";
 import { CircularProgress } from "@mui/material";
+import ThreadAction from "../components/ThreadAction";
+import '../styles/ThreadList.css'
 
 export interface threadType {
   id: string;
@@ -13,20 +15,27 @@ export interface threadType {
   topic: string;
   content: string;
   parentThreadId: string;
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+  };
 }
 
 export default function ThreadList() {
   const { course_id, urgency_tag } = useParams();
   const navigate = useNavigate();
   const [threadList, setThreadList] = useState<threadType[]>([]);
+  const [reference, setReference] = useState<threadRef>();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    console.log("Hello");
     const getThreadList = async () => {
+      setLoading(true);
       const response = await apiAxios.get(`/courses/${course_id}/threads`, {
         params: {
-          urgencyTag: urgency_tag,
+          urgency: urgency_tag,
         },
       });
       setThreadList(response.data);
@@ -49,29 +58,50 @@ export default function ThreadList() {
 
   if (threadList.length == 0) {
     return (
-      <div className="no-thread">
-        <h1>No Threads</h1>
-      </div>
+      <>
+        <div className="no-thread">
+          <h1>No Threads</h1>
+        </div>
+        <button className="add-button" onClick={handleAddButton}>
+          +
+        </button>
+        {popUp ? <PopUp handleCancel={handleCancelButton} /> : null}
+      </>
     );
   }
 
   return (
-    <div className="question-expanded">
+    <>
       {threadList.map((data, index) => (
-        <div key={index} className="question-flow" onClick={() => {
-          navigate(`/courses/${course_id}/threads/${data.id}/messages`);
-        }}>
-          <h5>author: {data.authorId}</h5>
-          <h4>{data.topic}</h4>
+        <div className="question-expanded" key={index}>
+          <ThreadAction
+            showModal={handleAddButton}
+            setReference={setReference}
+            threadId={data.id}
+            threadTopic={data.topic}
+          />
 
-          <h1>{data.content}</h1>
-          <hr />
+          <div
+            key={index}
+            className="question-flow"
+            onClick={() => {
+              navigate(`/courses/${course_id}/threads/${data.id}/messages`);
+            }}
+          >
+            <h5>author: {data.user.firstName + " " + data.user.lastName}</h5>
+            <h4>{data.topic}</h4>
+
+            <h1>{data.content}</h1>
+            <hr />
+          </div>
+          
         </div>
       ))}
       <button className="add-button" onClick={handleAddButton}>
         +
       </button>
-      {popUp ? <PopUp handleCancel={handleCancelButton} /> : null}
-    </div>
+
+      {popUp ? <PopUp handleCancel={handleCancelButton} reference={reference} /> : null}
+    </>
   );
 }

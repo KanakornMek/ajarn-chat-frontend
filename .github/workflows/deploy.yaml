@@ -1,0 +1,35 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Install node version 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Build
+      run: npm run build
+
+    - name: Deploy
+        uses: easingthemes/ssh-deploy@main
+        with:
+          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+          REMOTE_USER: ${{ secrets.SERVER_USERNAME }}
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          SOURCE: "dist"
+          TARGET: /var/www/ajarnhub.kanakornmek.dev
+          EXCLUDE: "/node_modules/"
+          SCRIPT_BEFORE: ls

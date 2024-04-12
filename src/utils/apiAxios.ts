@@ -2,7 +2,7 @@ import axios from 'axios';
 import refreshToken from './refreshToken';
 
 const apiAxios = axios.create({
-  baseURL: "https://ajarnhub.kanakornmek.dev/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   // baseURL: "http://localhost:3000",
   timeout: 5000,
   headers: {
