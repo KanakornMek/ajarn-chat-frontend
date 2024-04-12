@@ -25,29 +25,34 @@ function LoginForm() {
     formState: { errors },
   } = useForm<FormData>();
 
-  const { setToken, isAuthenticated } = useAuth()
+  const { setToken, isAuthenticated } = useAuth();
   const apiAxios = useApiAxios();
   const navigate = useNavigate();
 
   useEffect(() => {
-
-    if(isAuthenticated){
+    if (isAuthenticated) {
       const navigateCourses = async () => {
-        const course_id = await apiAxios.get('courses');
+        const course_id = await apiAxios.get("courses");
         navigate("/courses/" + course_id.data[0].id + "/threads/announcements");
-      }
+      };
       navigateCourses();
     }
-    
-  },[isAuthenticated])
+  }, [isAuthenticated]);
 
   const onSubmit = async (data: FormData) => {
-    await loginUser({
-        email: isEmail(data.studentIdOrEmail) ? data.studentIdOrEmail : undefined,
-        id: isStudentId(data.studentIdOrEmail) ? data.studentIdOrEmail : undefined,
-        password: data.password
-    }, apiAxios, setToken);
-    
+    await loginUser(
+      {
+        email: isEmail(data.studentIdOrEmail)
+          ? data.studentIdOrEmail
+          : undefined,
+        id: isStudentId(data.studentIdOrEmail)
+          ? data.studentIdOrEmail
+          : undefined,
+        password: data.password,
+      },
+      apiAxios,
+      setToken
+    );
   };
   const validateStudentIdOrEmail = (value: string): string | undefined => {
     if (!value.trim()) return "This field is required";
@@ -68,7 +73,9 @@ function LoginForm() {
           })}
         ></input>
         {errors.studentIdOrEmail && (
-          <span style={{color: "red"}}>{errors.studentIdOrEmail.message}</span>
+          <span style={{ color: "red" }}>
+            {errors.studentIdOrEmail.message}
+          </span>
         )}
       </div>
       <div className="input-container">
@@ -81,7 +88,20 @@ function LoginForm() {
         ></input>
       </div>
       <div className="input-container">
-        <button type="submit">Login</button>
+        <button
+          style={{
+            border: "none",
+            backgroundColor: "var(--lightblue)",
+            padding: "5px 10px",
+            color: "white",
+            borderRadius: 5,
+            fontFamily: "Eng",
+            fontSize: 18
+          }}
+          type="submit"
+        >
+          Login
+        </button>
       </div>
     </form>
   );
