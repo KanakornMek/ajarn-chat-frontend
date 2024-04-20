@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import apiAxios from "../utils/apiAxios";
 import { useParams } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
-import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { threadType } from "./ThreadList";
 import { io, Socket } from "socket.io-client";
-import '../styles/Messages.css'
+import "../styles/Messages.css";
 
 export interface messageType {
   id: string;
@@ -15,13 +15,20 @@ export interface messageType {
   createdAt: string;
   user: {
     id: string;
-    firstName: string,
-    lastName: string,
+    firstName: string;
+    lastName: string;
     role: string;
-  }
+  };
+}
+
+interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
 export default function Messages() {
+  const [user, setUser] = useState<User | null>(null);
   const { course_id, thread_id } = useParams();
   const [messages, setMessages] = useState<messageType[]>([]);
   const [threadInfo, setThreadInfo] = useState<threadType>();
@@ -33,14 +40,14 @@ export default function Messages() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log(messages.length)
-    if(messages.length) {
+    console.log(messages.length);
+    if (messages.length) {
       ref.current?.scrollIntoView({
         behavior: "smooth",
-        block: "end"
-      })
+        block: "end",
+      });
     }
-  },[messages.length]);
+  }, [messages.length]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessageInput(e.target.value);
@@ -50,9 +57,8 @@ export default function Messages() {
     socket?.connect();
     return () => {
       socket?.disconnect();
-    }
+    };
   }, [socket]);
-
 
   useEffect(() => {
     setSocket(
@@ -60,7 +66,7 @@ export default function Messages() {
         auth: {
           token: localStorage.getItem("token"),
         },
-        autoConnect: false
+        autoConnect: false,
       })
     );
     const getThreadInfo = async () => {
@@ -70,26 +76,32 @@ export default function Messages() {
       setThreadInfo(response.data);
       setLoadingInfo(false);
     };
+
+    const getUserInfo = async () => {
+      const userInfo = await apiAxios.get("/user");
+      setUser(userInfo.data);
+    };
+
     const getMessages = async () => {
       try {
         const response = await apiAxios.get(
           `/courses/${course_id}/threads/${thread_id}/messages`
         );
         setMessages(response.data);
-        console.log(response.data)
+        console.log(response.data);
       } catch (err) {
         console.error(err);
       } finally {
         setLoadingMsg(false);
       }
     };
-
+    getUserInfo();
     getThreadInfo();
     getMessages();
     ref.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "end"
-      })
+      behavior: "smooth",
+      block: "end",
+    });
   }, [thread_id]);
 
   const sendMessage = () => {
@@ -106,9 +118,8 @@ export default function Messages() {
   };
 
   useEffect(() => {
-    if(socket)
-      socket?.emit("join",{course: course_id, thread: thread_id})
-  },[course_id, thread_id, socket])
+    if (socket) socket?.emit("join", { course: course_id, thread: thread_id });
+  }, [course_id, thread_id, socket]);
 
   useEffect(() => {
     if (socket) {
@@ -125,11 +136,36 @@ export default function Messages() {
     return <CircularProgress />;
   }
 
+  const onResolve = async () => {
+    if (
+      user?.firstName === threadInfo?.user.firstName &&
+      user?.lastName === threadInfo?.user.lastName &&
+      threadInfo?.status === "answered"
+    ) {
+      try {
+        setThreadInfo({ ...threadInfo, status: "resolved" });
+
+        await apiAxios.put(`/courses/${course_id}/threads/${thread_id}`, {
+          status: "archived",
+        });
+      } catch (error) {
+        console.error("Error resolving thread:", error);
+      }
+    }
+  };
+
   return (
     <>
       <div className="question-expanded">
         <div className="question-flow">
-          <h5>author: {threadInfo?.user.firstName + " " + threadInfo?.user.lastName}</h5>
+          <div className="message-author">
+            <h5>
+              {threadInfo?.user.firstName + " " + threadInfo?.user.lastName}
+            </h5>
+            <div className={"message-role-" + threadInfo?.user.role}>
+              <h5>({threadInfo?.user.role})</h5>
+            </div>
+          </div>
           <h4>{threadInfo?.topic}</h4>
           <h1>{threadInfo?.content}</h1>
           <hr />
@@ -145,20 +181,25 @@ export default function Messages() {
         <div ref={ref} />
       </div>
       <div className="question-input-row">
-          <div className="send-row">
-            <input
-              type="text"
-              className="send-text-field"
-              id="input-text"
-              value={messageInput}
-              onChange={handleInputChange}
-            ></input>
-            <button className="send-btn" onClick={sendMessage}>
-              <SendRoundedIcon style={{color: "white"}} />
-            </button>
-          </div>
-          <button className="resolve-btn">Resolve</button>
+        <div className="send-row">
+          <input
+            type="text"
+            className="send-text-field"
+            id="input-text"
+            value={messageInput}
+            onChange={handleInputChange}
+          ></input>
+          <button className="send-btn" onClick={sendMessage}>
+            <SendRoundedIcon style={{ color: "white" }} />
+          </button>
         </div>
+        <button
+          className={"resolve-btn-" + threadInfo?.status}
+          onClick={onResolve}
+        >
+          Resolve
+        </button>
+      </div>
     </>
   );
 }
