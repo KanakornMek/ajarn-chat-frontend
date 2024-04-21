@@ -16,7 +16,6 @@ export default function Course() {
   /*data*/
   const [courseData, setCourseData] = useState<courseType>();
   const { course_id, urgency_tag } = useParams();
-  const [title, setTitle] = useState<string>("");
   useEffect(() => {
     const getCourseData = async () => {
       const courses = await apiAxios.get(`/courses/${course_id}`);
@@ -115,7 +114,7 @@ export default function Course() {
               </h1>
             </div>
             <div className="course-thread">
-              <Outlet context={setTitle} />
+              <Outlet />
             </div>
           </div>
         </div>
