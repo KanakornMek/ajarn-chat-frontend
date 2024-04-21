@@ -15,7 +15,7 @@ export interface courseType {
 export default function Course() {
   /*data*/
   const [courseData, setCourseData] = useState<courseType>();
-  const { course_id, thread_urgency } = useParams();
+  const { course_id, urgency_tag } = useParams();
   const [title, setTitle] = useState<string>("");
   useEffect(() => {
     const getCourseData = async () => {
@@ -26,15 +26,21 @@ export default function Course() {
     getCourseData();
   }, []);
 
-  /*params*/
-
   /*array*/
   const threadArray = [
     { urgency_name: "!!! Urgent", urgency_tag: "urgent" },
     { urgency_name: "!! Regular", urgency_tag: "regular" },
     { urgency_name: "! Low Priority", urgency_tag: "lowPriority" },
   ];
+
   /*function*/
+  var banner = (urgency_tag: any) => {
+    for (var i = 0; i < threadArray.length; i++) {
+      if (urgency_tag == threadArray[i].urgency_tag) {
+        return threadArray[i].urgency_name;
+      }
+    }
+  };
 
   /*state*/
 
@@ -57,7 +63,7 @@ export default function Course() {
             <ul>
               <li
                 className={
-                  thread_urgency === "announcements"
+                  urgency_tag === "announcements"
                     ? "course-nav-bar-tile-selected"
                     : "course-nav-bar-tile"
                 }
@@ -76,7 +82,7 @@ export default function Course() {
                 <li
                   key={thread.urgency_tag}
                   className={
-                    thread_urgency === thread.urgency_tag
+                    urgency_tag === thread.urgency_tag
                       ? "course-nav-bar-tile-selected"
                       : "course-nav-bar-tile"
                   }
@@ -105,7 +111,7 @@ export default function Course() {
               }}
             >
               <h1>
-                {title}
+                {banner(urgency_tag) ? banner(urgency_tag) : "Announcement"}
               </h1>
             </div>
             <div className="course-thread">

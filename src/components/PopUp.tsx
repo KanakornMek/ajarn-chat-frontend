@@ -23,6 +23,7 @@ export default function PopUp({ handleCancel, reference }: Props) {
   const { register, handleSubmit, control } = useForm();
   const [threads, setThreads] = useState<threadRef[]>([]);
   const { course_id } = useParams();
+  const { urgency_tag } = useParams();
   const apiAxios = useApiAxios();
   const navigate = useNavigate();
 
@@ -45,7 +46,10 @@ export default function PopUp({ handleCancel, reference }: Props) {
 
   const onSubmit = async (data: any) => {
     try {
-      await apiAxios.post(`/courses/${course_id}/threads`, {...data, parentThread: data.parentThread?.id});
+      await apiAxios.post(`/courses/${course_id}/threads`, {
+        ...data,
+        parentThread: data.parentThread?.id,
+      });
     } catch (err) {
       console.error(err);
     } finally {
@@ -101,7 +105,7 @@ export default function PopUp({ handleCancel, reference }: Props) {
         <Controller
           name="urgencyTagString"
           control={control}
-          defaultValue="regular"
+          defaultValue={urgency_tag}
           render={({ field }) => (
             <Select {...field} inputProps={{ "aria-label": "Without label" }}>
               <MenuItem value={"regular"}>Regular</MenuItem>

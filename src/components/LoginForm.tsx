@@ -92,11 +92,11 @@ function LoginForm() {
           style={{
             border: "none",
             backgroundColor: "var(--lightblue)",
-            padding: "5px 10px",
+            padding: "10px 10px",
             color: "white",
             borderRadius: 5,
             fontFamily: "Eng",
-            fontSize: 18
+            fontSize: 18,
           }}
           type="submit"
         >
