@@ -22,11 +22,17 @@ export interface threadRef {
 export default function PopUp({ handleCancel, reference }: Props) {
   const { register, handleSubmit, control } = useForm();
   const [threads, setThreads] = useState<threadRef[]>([]);
+  const [userRole, setUserRole] = useState<string>();
   const { course_id } = useParams();
   const { urgency_tag } = useParams();
   const apiAxios = useApiAxios();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    apiAxios.get('/user').then((res) => {
+      setUserRole(res.data.role);
+    })
+  },[])
   useEffect(() => {
     apiAxios.get(`/courses/${course_id}/threads`).then((res) => {
       setThreads(
@@ -111,6 +117,7 @@ export default function PopUp({ handleCancel, reference }: Props) {
               <MenuItem value={"regular"}>Regular</MenuItem>
               <MenuItem value={"urgent"}>Urgent</MenuItem>
               <MenuItem value={"lowPriority"}>Low Priority</MenuItem>
+              {(userRole !== "Student") && (<MenuItem value={"announcements"}>Announcement</MenuItem>)}
             </Select>
           )}
         />
