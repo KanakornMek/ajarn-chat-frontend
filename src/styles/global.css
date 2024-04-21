@@ -92,14 +92,18 @@ background-color: var(--lightgrey);
   margin-left: 0px;
 }
 
-input[type="text"] {
+input[type="text"],input[type="password"] {
 
   font-family: "Eng";
   font-weight: 300;
   padding-left: 5px;
   outline: none;
   background-color: var(--white);
- 
+
   border: 1px solid var(--lightgrey);
   border-radius: 2px;
+}
+
+textarea {
+  max-width: 90%;
 }

@@ -39,7 +39,16 @@ export default function NavBar() {
     <div className="nav-bar">
       <div className="nav-bar-top">
         <div className="profile-container"></div>
-        <h3 style={{textOverflow: "ellipsis", whiteSpace: "nowrap", width: "10ch", overflow:"hidden"}}>{user?.firstName + " " + user?.lastName}</h3>
+        <h3
+          style={{
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            width: "10ch",
+            overflow: "hidden",
+          }}
+        >
+          {user?.firstName + " " + user?.lastName}
+        </h3>
       </div>
 
       <ul className="course-list">
