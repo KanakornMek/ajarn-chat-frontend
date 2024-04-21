@@ -51,6 +51,12 @@ export default function ThreadList() {
   useEffect(() => {
     const getThreadList = async () => {
       setLoading(true);
+      if (urgency_tag === "announcements") {
+        const response = await apiAxios.get(`/courses/${course_id}/announcements`, {
+        });
+        setThreadList(response.data);
+        setLoading(false);
+      }else{
       const response = await apiAxios.get(`/courses/${course_id}/threads`, {
         params: {
           urgency: urgency_tag,
@@ -58,7 +64,7 @@ export default function ThreadList() {
       });
       setThreadList(response.data);
       setLoading(false);
-    };
+    }};
     getThreadList();
   }, [course_id, urgency_tag]);
 
