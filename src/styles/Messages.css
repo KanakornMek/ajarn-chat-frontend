@@ -1,3 +1,28 @@
 .message-content {
     margin: 0;
 }
+
+.message-author {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 5px;
+  
+}
+
+.message-role-Student h5 {
+color: rgb(0, 140, 255,.5);
+
+
+
+}
+
+.message-role-Lecturer h5 {
+   color: rgb(255, 102, 102, 0.5);
+
+}
+
+.message-role-TA h5 {
+    color: rgb(255, 204, 0, 0.5);
+
+}
