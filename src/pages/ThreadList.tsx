@@ -11,6 +11,7 @@ export interface threadType {
   createdAt: string;
   urgencyTag: string;
   authorId: string;
+  courseId: string;
   status: string;
   topic: string;
   content: string;
@@ -21,6 +22,23 @@ export interface threadType {
     lastName: string;
     role: string;
   };
+  parentThread: {
+    id: string;
+    createdAt: string;
+    courseId: string;
+    urgencyTag: string;
+    authorId: string;
+    status: string;
+    topic: string;
+    content: string;
+    parentThreadId: string;
+    user: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      role: string;
+    };
+  }
 }
 
 export default function ThreadList() {
@@ -92,6 +110,9 @@ export default function ThreadList() {
             <h4>{data.topic}</h4>
 
             <h1>{data.content}</h1>
+            {data.parentThread && (
+              <ReferenceThread parentThread={data.parentThread} />
+            )}
             <hr />
           </div>
           
@@ -103,5 +124,42 @@ export default function ThreadList() {
 
       {popUp ? <PopUp handleCancel={handleCancelButton} reference={reference} /> : null}
     </>
+  );
+}
+
+interface parentThreadProps {
+  parentThread: {
+    id: string;
+    createdAt: string;
+    urgencyTag: string;
+    courseId: string;
+    authorId: string;
+    status: string;
+    topic: string;
+    content: string;
+    parentThreadId: string;
+    user: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      role: string;
+    };
+  }
+}
+
+function ReferenceThread({parentThread}: parentThreadProps) {
+  const navigate = useNavigate();
+  return (
+    <div className="reference-thread">
+      <h1>Reference Thread</h1>
+      <div style={{border: "1px solid black", padding: "10px 5px 5px 5px", borderRadius:"5px"}} onClick={() => {
+        navigate(`/courses/${parentThread.courseId}/threads/${parentThread.id}/messages`);
+      }}>
+        <h4>{parentThread.topic}</h4>
+        <h1>{parentThread.content}</h1>
+      </div>
+
+      
+    </div>
   );
 }
